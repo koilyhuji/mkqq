@@ -1,3 +1,4 @@
-# mkqq - Ứng dụng Quản lý mật khẩu
+# mkqq - Ứng dụng Quản lý thư viện
 
-cho phép lưu trữ mật khẩu và tạo mật khẩu mạnh
+
+Đây là ứng dụng dùng để quản lý thư viện sử dụng javafx 
