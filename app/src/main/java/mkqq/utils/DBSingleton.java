@@ -8,9 +8,9 @@ public class DBSingleton {
     private static DBSingleton instance;
 
 
-    private static final String URL = "jdbc:mysql://localhost:3306/libfinal";
+    private static final String URL = "jdbc:mysql://localhost:3306/libraryfinal";
     private static final String USER = "root";
-    private static final String PASSWORD = "no, fuck you";
+    private static final String PASSWORD = "123";
 
 
     private static Connection connection;
@@ -18,7 +18,6 @@ public class DBSingleton {
 
     private DBSingleton() {
         try {
-
             this.connection = DriverManager.getConnection(URL, USER, PASSWORD);
         } catch (SQLException e) {
             e.printStackTrace();  // Handle the exception, or log it as needed
@@ -33,7 +32,7 @@ public class DBSingleton {
         return instance;
     }
 
-    public static Connection getConnection() {
+    public Connection getConnection() {
         return connection;
     }
 

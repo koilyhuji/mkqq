@@ -11,14 +11,14 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="528.0" prefWidth="632.0" style="-fx-background-color: linear-gradient(to right, #292f56,#1e4572);" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mkqq.Controller.LoginController">
+<AnchorPane prefHeight="528.0" prefWidth="632.0" style="-fx-background-color: linear-gradient(to right, #292f56,#1e4572);" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mkqq.Controller.LoginController">
     <VBox alignment="CENTER" maxHeight="600.0" maxWidth="716.0" prefHeight="528.0" prefWidth="616.0" spacing="2.0">
         <Label style="-fx-text-fill: white;-fx-font-size: 26;" text="Đăng nhập hệ thống quản lý thư viện">
         </Label>
 
         <VBox alignment="CENTER" maxWidth="306.0" prefHeight="358.0" prefWidth="306.0" spacing="20.0">
 
-                    <TextField fx:id="emailField" promptText="Email" style="-fx-background-radius: 10; -fx-font-size: 16;" />
+                    <TextField fx:id="userNameField" promptText="Email" style="-fx-background-radius: 10; -fx-font-size: 16;" />
                     <PasswordField fx:id="passwordField"  promptText="Mật khẩu" style="-fx-background-radius: 10; -fx-font-size: 16;" />
                     <Button fx:id="loginButton" onAction="#handleLogin" style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-size: 16px; -fx-background-radius: 10;" text="Đăng nhập">
                         <padding>

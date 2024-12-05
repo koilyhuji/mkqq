@@ -7,9 +7,9 @@ public class UserBLL {
     UserDAO userDAO = new UserDAO();
     String loginStatusString = null;
 
-    public boolean checkLogin(String email, String password) {
+    public boolean checkLogin(String name, String password) {
 
-        boolean isValidUser = userDAO.login(email, password);
+        boolean isValidUser = userDAO.login(name, password);
         if (isValidUser) {
 
             UserDTO currentUser = userDAO.getCurrentUserifLoggedIn();

@@ -1,36 +1,50 @@
 package mkqq.utils;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import mkqq.DTO.UserDTO;
+
 public class DBUtils {
-
-    // Method to close the database resources
-    public static void closeResources(Connection conn, PreparedStatement stmt, ResultSet rs) {
-        try {
-            if (rs != null) {
-                rs.close();
-            }
-        } catch (SQLException e) {
-            System.err.println("Error closing ResultSet: " + e.getMessage());
-        }
+    public static <T> ObservableList<T> getAll(String tablename, Class<T> type){
+        ObservableList<T> typedList = FXCollections.observableArrayList();
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        StringBuilder prequery = new StringBuilder("SELECT * FROM " + tablename);
+        String query = prequery.toString();
 
         try {
-            if (stmt != null) {
-                stmt.close();
+            conn = DBSingleton.getInstance().getConnection();
+            stmt = conn.prepareStatement(query);
+            //stmt.setString(1,tablename);
+            rs = stmt.executeQuery();
+            Field[] fields = type.getDeclaredFields();
+            while (rs.next()) {
+                T entity = type.getDeclaredConstructor().newInstance();
+                for (Field field : fields) {
+                    field.setAccessible(true);
+                    String columnName = field.getName().toLowerCase();
+                    field.set(entity, rs.getObject(columnName));
+                }
+
+                if (type.isInstance(entity)) {
+                    typedList.add(type.cast(entity));
+                    typedList.add(entity);
+                }
             }
-        } catch (SQLException e) {
-            System.err.println("Error closing PreparedStatement: " + e.getMessage());
+        } catch (SQLException | IllegalAccessException | InstantiationException | NoSuchMethodException |
+                 InvocationTargetException e) {
+            e.printStackTrace();
         }
 
-        try {
-            if (conn != null) {
-                conn.close();
-            }
-        } catch (SQLException e) {
-            System.err.println("Error closing Connection: " + e.getMessage());
-        }
+        return typedList;
     }
+
 }
