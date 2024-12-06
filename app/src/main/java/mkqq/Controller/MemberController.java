@@ -22,12 +22,12 @@ public class MemberController {
     public void img_back(MouseEvent event) throws IOException {
 
     }
-    //button new action
+
     public void btn_new(ActionEvent actionEvent)  {
 
     }
 
-    //button add action
+
     public void btn_add(ActionEvent actionEvent)  {
 
     }
