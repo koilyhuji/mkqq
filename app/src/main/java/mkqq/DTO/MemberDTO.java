@@ -12,7 +12,9 @@ public class MemberDTO {
         this.address = address;
         this.contact = contact;
     }
+    public MemberDTO(){
 
+    }
     public String getId() {
         return id;
     }
