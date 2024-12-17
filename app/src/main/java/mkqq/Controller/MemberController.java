@@ -2,9 +2,12 @@ package mkqq.Controller;
 
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import javafx.animation.TranslateTransition;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -12,11 +15,13 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -24,7 +29,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import javafx.scene.input.MouseEvent;
+import mkqq.MainApp;
 import mkqq.BLL.MemberBLL;
 import mkqq.DTO.MemberDTO;
 
@@ -45,6 +52,7 @@ public class MemberController {
     @FXML
     public Button btn_add;
     public MemberBLL memberBLL = new MemberBLL();
+    List<MemberDTO> memberlist = memberBLL.getMemberDTOS();
 
     public void initialize() throws ClassNotFoundException {
 
@@ -56,7 +64,7 @@ public class MemberController {
         mem_tbl.getColumns().get(2).setCellValueFactory(new PropertyValueFactory<>("address"));
         mem_tbl.getColumns().get(3).setCellValueFactory(new PropertyValueFactory<>("contact"));
 
-        List<MemberDTO> memberlist = memberBLL.getMemberDTOS();
+        Collections.reverse(memberlist);
         ObservableList<MemberDTO> observableMemberList = FXCollections.observableArrayList(memberlist);
         mem_tbl.setItems(observableMemberList);
 
@@ -65,16 +73,16 @@ public class MemberController {
             public void changed(ObservableValue<? extends MemberDTO> observable, MemberDTO oldValue, MemberDTO newValue) {
                 MemberDTO selectedItem = mem_tbl.getSelectionModel().getSelectedItem();
                 try {
-                        MemberDTO mem = memberBLL.getMemberfromID(selectedItem.getId());
+                    MemberDTO mem = memberBLL.getMemberfromID(selectedItem.getId());
 
-                        if (mem != null) {
-                            mem_id.setText(mem.getId());
-                            mem_nme.setText(mem.getName());
-                            mem_addss.setText(mem.getAddress());
-                            mem_num.setText(mem.getContact());
-                            mem_id.setDisable(true);
-                            btn_add.setText("Update");
-                        }
+                    if (mem != null) {
+                        mem_id.setText(mem.getId());
+                        mem_nme.setText(mem.getName());
+                        mem_addss.setText(mem.getAddress());
+                        mem_num.setText(mem.getContact());
+                        mem_id.setDisable(true);
+                        btn_add.setText("Update");
+                    }
 
                 } catch (NullPointerException n) {
                     return;
@@ -84,7 +92,20 @@ public class MemberController {
     }
 
     public void img_back(MouseEvent event) throws IOException {
-
+       Stage stage;
+        Scene scene;
+        Parent root;
+        FXMLLoader fxmlLoader = new FXMLLoader(MainApp.class.getResource("home_view.fxml"));
+        try {
+            root = fxmlLoader.load();
+            stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+            scene = new Scene(root);
+            stage.setScene(scene);
+            stage.centerOnScreen();
+            stage.show();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void btn_new(ActionEvent actionEvent)  {
@@ -136,6 +157,7 @@ public class MemberController {
                                         "Record updated!!",
                                         ButtonType.OK);
                                 Optional<ButtonType> buttonType = alert.showAndWait();
+                                
                             } else {
                                 Alert alert = new Alert(Alert.AlertType.ERROR,
                                         "Update error!",
@@ -146,21 +168,50 @@ public class MemberController {
                     }
                 }
             }
-            ObservableList<MemberDTO> observableMemberList = FXCollections.observableArrayList(members);
-            mem_tbl.setItems(observableMemberList);
+            //ObservableList<MemberDTO> observableMemberList = FXCollections.observableArrayList(members);
+            //mem_tbl.setItems(observableMemberList);
         }
         mem_nme.clear();
         mem_addss.clear();
         mem_num.clear();
         btn_add.setText("Add");
         mem_id.setDisable(true);
-        mem_tbl.refresh();
-        try {
-            initialize();
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        mem_tbl.getItems().clear();
+        refreshTable();
 
+    }
+    public void refreshTable(){
+        mem_tbl.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("id"));
+        mem_tbl.getColumns().get(1).setCellValueFactory(new PropertyValueFactory<>("name"));
+        mem_tbl.getColumns().get(2).setCellValueFactory(new PropertyValueFactory<>("address"));
+        mem_tbl.getColumns().get(3).setCellValueFactory(new PropertyValueFactory<>("contact"));
+
+        memberlist = memberBLL.getMemberDTOS();
+        Collections.reverse(memberlist);
+        ObservableList<MemberDTO> observableMemberList = FXCollections.observableArrayList(memberlist);
+        mem_tbl.setItems(observableMemberList);
+
+        mem_tbl.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<MemberDTO>() {
+            @Override
+            public void changed(ObservableValue<? extends MemberDTO> observable, MemberDTO oldValue, MemberDTO newValue) {
+                MemberDTO selectedItem = mem_tbl.getSelectionModel().getSelectedItem();
+                try {
+                    MemberDTO mem = memberBLL.getMemberfromID(selectedItem.getId());
+
+                    if (mem != null) {
+                        mem_id.setText(mem.getId());
+                        mem_nme.setText(mem.getName());
+                        mem_addss.setText(mem.getAddress());
+                        mem_num.setText(mem.getContact());
+                        mem_id.setDisable(true);
+                        btn_add.setText("Update");
+                    }
+
+                } catch (NullPointerException n) {
+                    return;
+                }
+            }
+        });
     }
 
     public void btn_dtl(ActionEvent actionEvent)  {
@@ -182,11 +233,9 @@ public class MemberController {
                 Optional<ButtonType> buttonType = alert.showAndWait();
             }
         }
-        try {
-            mem_tbl.getItems().clear();
-            initialize();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        mem_tbl.getItems().clear();
+        refreshTable();
+
     }
+    
 }

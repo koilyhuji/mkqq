@@ -47,15 +47,13 @@
                 <TableColumn fx:id="mem_add_col" prefWidth="164.0" text="Địa chỉ "/>
                 <TableColumn fx:id="mem_no_col" prefWidth="111.0" text="Điện thoại "/>
             </columns>
-            <effect>
-                <InnerShadow/>
-            </effect>
+
         </TableView>
         <ImageView fx:id="img_bk" fitHeight="40.0" fitWidth="40.0" layoutX="50.0" layoutY="50.0"
             onMouseClicked="#img_back"  pickOnBounds="true"
             preserveRatio="true">
             <image>
-                <Image url="@./images/back.png"/>
+                <Image url="@images/back.png"/>
             </image>
         </ImageView>
         <Label alignment="CENTER" layoutX="171.0" layoutY="569.0" prefHeight="17.0" prefWidth="264.0"

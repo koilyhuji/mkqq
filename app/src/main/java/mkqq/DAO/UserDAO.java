@@ -71,7 +71,7 @@ public class UserDAO {
     public boolean login(String name, String plainPassword) {
         String passwordHash = CommonUtils.encodePassword(plainPassword);
         //StringBuilder presql = new StringBuilder("SELECT * FROM users WHERE name = "+ name +" AND password = "+ passwordHash);
-        String sql = "SELECT * FROM users WHERE name = ? AND password = ?";
+        String sql = "SELECT * FROM users WHERE name = ? AND passwordHash = ?";
         //String sql = presql.toString();
         try (Connection conn = DBSingleton.getInstance().getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {

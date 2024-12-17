@@ -18,18 +18,18 @@ public class HomeController {
     public AnchorPane root;
 
     public void navigate(MouseEvent event) throws IOException {
-        System.out.println("yooo");
+        
         if (event.getSource() instanceof ImageView) {
             ImageView icon = (ImageView) event.getSource();
 
             Parent root = null;
-
+           
             switch (icon.getId()) {
                 case "ic_member":
-                    switchscene(event,"login_view.fxml");
+                    switchscene(event,"member_view.fxml");
                     break;
-                case "books":
-
+                case "ic_books":
+                    switchscene(event, "books_view.fxml");
                     break;
                 case "issue":
 

@@ -18,7 +18,7 @@ public class MainApp extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("member_view.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("home_view.fxml"));
 
         Scene scene = new Scene(root);
         //scene.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
@@ -29,7 +29,7 @@ public class MainApp extends Application {
     }
 
     public static void main(String[] args) {
-
+        
         launch(args);
         
     }

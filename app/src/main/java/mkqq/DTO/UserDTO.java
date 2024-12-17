@@ -4,7 +4,7 @@ public class UserDTO {
     private String userID;
     private String name;
     private String email;
-    private String password;
+    private String passwordHash;
     private boolean isAdmin;
 
     public UserDTO() {
@@ -15,7 +15,7 @@ public class UserDTO {
         this.userID = userID;
         this.name = fullName;
         this.email = email;
-        this.password = passwordHash;
+        this.passwordHash = passwordHash;
         this.isAdmin = isAdmin;
 
     }
@@ -45,11 +45,11 @@ public class UserDTO {
     }
 
     public String getPassword() {
-        return password;
+        return passwordHash;
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        this.passwordHash = password;
     }
 
     public boolean isAdmin() {

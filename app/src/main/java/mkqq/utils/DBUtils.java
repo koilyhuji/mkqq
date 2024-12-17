@@ -36,14 +36,18 @@ public class DBUtils {
 
                 if (type.isInstance(entity)) {
                     typedList.add(type.cast(entity));
-                    typedList.add(entity);
+
                 }
             }
         } catch (SQLException | IllegalAccessException | InstantiationException | NoSuchMethodException |
                  InvocationTargetException e) {
             e.printStackTrace();
         }
-
+        try {
+            conn.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         return typedList;
     }
 

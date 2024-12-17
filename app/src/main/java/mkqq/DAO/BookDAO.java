@@ -6,36 +6,35 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-import mkqq.DTO.MemberDTO;
-
+import mkqq.DTO.BookDTO;
+import mkqq.DTO.BookDTO;
 import mkqq.utils.DBSingleton;
 import mkqq.utils.DBUtils;
 
-public class MemberDAO {
-    private MemberDTO memberDTO = new MemberDTO();
-    private List<MemberDTO> memberDTOS;
+public class BookDAO {
+    private BookDTO BookDTO = new BookDTO();
+    private List<BookDTO> BookDTOS;
     Connection conn = null;
     PreparedStatement stmt = null;
     ResultSet rs = null;
 
-    public MemberDAO(){
-        this.memberDTOS = DBUtils.getAll("memberdetail",MemberDTO.class);
+    public BookDAO(){
+        this.BookDTOS = DBUtils.getAll("bookdetail",BookDTO.class);
         conn = DBSingleton.getInstance().getConnection();
     }
 
-    public List<MemberDTO> getMemberDTOS() {
-        this.memberDTOS = DBUtils.getAll("memberdetail",MemberDTO.class);
-        return memberDTOS;
+    public List<BookDTO> getBookDTOS() {
+        this.BookDTOS = DBUtils.getAll("bookdetail",BookDTO.class);
+        return BookDTOS;
     }
-
-    public boolean createMember(MemberDTO member){
+    public boolean createBook(BookDTO Book){
         try{
             conn = DBSingleton.getInstance().getConnection();
-            stmt = conn.prepareStatement("INSERT INTO memberdetail values(?,?,?,?)");
-            stmt.setString(1,member.getId());
-            stmt.setString(2,member.getName());
-            stmt.setString(3,member.getAddress());
-            stmt.setString(4,member.getContact());
+            stmt = conn.prepareStatement("INSERT INTO bookdetail values(?,?,?,?)");
+            stmt.setString(1,Book.getId());
+            stmt.setString(2,Book.getTitle());
+            stmt.setString(3,Book.getAuthor());
+            stmt.setString(4,Book.getStatus());
 
             int affectedRows =  stmt.executeUpdate();
 
@@ -53,15 +52,15 @@ public class MemberDAO {
 
         return false;
     }
-    public boolean insertMember(MemberDTO member) {
+    public boolean insertBook(BookDTO Book) {
 
         try{
             conn = DBSingleton.getInstance().getConnection();
-            stmt = conn.prepareStatement("INSERT INTO memberdetail values(?,?,?,?)");
-            stmt.setString(1,member.getId());
-            stmt.setString(2,member.getName());
-            stmt.setString(3,member.getAddress());
-            stmt.setString(4,member.getContact());
+            stmt = conn.prepareStatement("INSERT INTO bookdetail values(?,?,?,?)");
+            stmt.setString(1,Book.getId());
+            stmt.setString(2,Book.getTitle());
+            stmt.setString(3,Book.getAuthor());
+            stmt.setString(4,Book.getStatus());
 
             int affectedRows =  stmt.executeUpdate();
 
@@ -80,14 +79,14 @@ public class MemberDAO {
         return false;
     }
 
-    public boolean updateMember(MemberDTO member) {
+    public boolean updateBook(BookDTO Book) {
         try{
             conn = DBSingleton.getInstance().getConnection();
-            stmt = conn.prepareStatement("UPDATE memberdetail SET name=? , address=? , contact=? where id=?");
-            stmt.setString(4,member.getId());
-            stmt.setString(1,member.getName());
-            stmt.setString(2,member.getAddress());
-            stmt.setString(3,member.getContact());
+            stmt = conn.prepareStatement("UPDATE bookdetail SET title=? , author=? , status=? where id=?");
+            stmt.setString(4,Book.getId());
+            stmt.setString(1,Book.getAuthor());
+            stmt.setString(2,Book.getTitle());
+            stmt.setString(3,Book.getStatus());
 
             int affectedRows =  stmt.executeUpdate();
 
@@ -107,11 +106,11 @@ public class MemberDAO {
         return false;
     }
 
-    public boolean deleteMember(String member) {
+    public boolean deleteBook(String Book) {
             try {
                 conn = DBSingleton.getInstance().getConnection();
-                stmt = conn.prepareStatement("DELETE from memberdetail where id=?");
-                stmt.setString(1,member);
+                stmt = conn.prepareStatement("DELETE from bookdetail where id=?");
+                stmt.setString(1,Book);
                 int affected = stmt.executeUpdate();
                 if (affected > 0) {
                    return true;
@@ -122,10 +121,9 @@ public class MemberDAO {
         return false;
 
     }
-
     public String getNewId(){
 
-        String query = "SELECT id FROM memberdetail";
+        String query = "SELECT id FROM bookdetail";
         String id = "";
         int maxId = 0;
         String ids = null;
@@ -137,7 +135,7 @@ public class MemberDAO {
             while (rs.next()) {
                 ids = rs.getString(1);
 
-                int idint = Integer.parseInt(ids.replace("M", ""));
+                int idint = Integer.parseInt(ids.replace("B", ""));
                 if (idint > maxId) {
                     maxId = idint;
                 }
@@ -145,11 +143,11 @@ public class MemberDAO {
             maxId = maxId + 1;
 
             if (maxId < 10) {
-                id = "M00" + maxId;
+                id = "B00" + maxId;
             } else if (maxId < 100) {
-                id = "M0" + maxId;
+                id = "B0" + maxId;
             } else {
-                id = "M" + maxId;
+                id = "B" + maxId;
             }
         } catch (SQLException e) {
             // TODO Auto-generated catch block
@@ -158,11 +156,11 @@ public class MemberDAO {
 
         return id;
     }
-    public MemberDTO getMemberfromID(String id){
-        for (var member: memberDTOS
+    public BookDTO getBookfromId(String id){
+        for (var book: BookDTOS
              ) {
-            if(member.getId().equals(id)){
-                return member;
+            if(book.getId().equals(id)){
+                return book;
             }
         }
         return null;

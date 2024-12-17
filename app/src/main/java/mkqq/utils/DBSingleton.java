@@ -33,6 +33,12 @@ public class DBSingleton {
     }
 
     public Connection getConnection() {
+        try {
+            this.connection.close();
+            this.connection = DriverManager.getConnection(URL, USER, PASSWORD);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         return connection;
     }
 
