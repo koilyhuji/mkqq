@@ -31,8 +31,8 @@ public class HomeController {
                 case "ic_books":
                     switchscene(event, "books_view.fxml");
                     break;
-                case "issue":
-
+                case "ic_issue":
+                    switchscene(event,"bookissue_view.fxml");
                     break;
                 case "bk_return":
 

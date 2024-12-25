@@ -1,12 +1,14 @@
 package mkqq.DTO;
 
+import java.sql.Date;
+
 public class BookIssueDTO {
     private String issueId;
-    private String date;
+    private Date date;
     private String memberId;
     private String bookId;
 
-    public BookIssueDTO(String issueId, String date, String memberId, String bookId) {
+    public BookIssueDTO(String issueId, Date date, String memberId, String bookId) {
         this.issueId = issueId;
         this.date = date;
         this.memberId = memberId;
@@ -24,11 +26,11 @@ public class BookIssueDTO {
         this.issueId = issueId;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 

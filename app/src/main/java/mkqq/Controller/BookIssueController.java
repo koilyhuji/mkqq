@@ -1,80 +1,113 @@
 package mkqq.Controller;
 
+import java.io.IOException;
+import java.sql.Date;
+import java.util.List;
+
+import javafx.animation.TranslateTransition;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
+import javafx.util.Duration;
+import mkqq.BLL.BookBLL;
+import mkqq.BLL.BookIssueBLL;
+import mkqq.BLL.MemberBLL;
 import mkqq.DTO.BookDTO;
 import mkqq.DTO.BookIssueDTO;
+import mkqq.DTO.MemberDTO;
+import mkqq.MainApp;
+import mkqq.utils.IssueViewModel;
 
 public class BookIssueController {
 
+    @FXML
     public TextField txt_issid;
+    @FXML
     public DatePicker txt_isu_date;
+    @FXML
     public TextField txt_name;
+    @FXML
     public TextField txt_title;
+    @FXML
     public ComboBox mem_is_id;
+    @FXML
     public ComboBox book_id;
+    @FXML
     public TableView<BookIssueDTO> bk_ssue_tbl;
+    @FXML
     public AnchorPane bk_iss;
 
-
+    public BookIssueBLL bookIssueBLL = new BookIssueBLL();
+    List<BookIssueDTO> bookIssueList = bookIssueBLL.getBookIssueDTOS();
+    List<MemberDTO> memberDTOList = new MemberBLL().getMemberDTOS();
+    List<BookDTO> bookDTOList = new BookBLL().getBookDTOS();
 
     public void initialize() throws ClassNotFoundException {
-        bk_ssue_tbl.setDisable(true);
+
 
         bk_ssue_tbl.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("issueId"));
         bk_ssue_tbl.getColumns().get(1).setCellValueFactory(new PropertyValueFactory<>("date"));
         bk_ssue_tbl.getColumns().get(2).setCellValueFactory(new PropertyValueFactory<>("memberId"));
         bk_ssue_tbl.getColumns().get(3).setCellValueFactory(new PropertyValueFactory<>("bookId"));
+        //ObservableList<IssueViewModel> detailIssueList = FXCollections.observableArrayList();
+        //fucking digusting
+//        for (BookIssueDTO bookIssue: bookIssueList
+//             ) {
+//            String memberName = new MemberBLL().getMemberfromID(bookIssue.getMemberId()).getName();
+//            String bookName = new BookBLL().getBookFromId(bookIssue.getBookId()).getTitle();
+//            IssueViewModel vm = new IssueViewModel(bookIssue.getIssueId(),bookIssue.getDate().toString(),bookName, memberName);
+//            detailIssueList.add(vm);
+//        }
 
-
-        try {
-            connection = DBConnection.getInstance().getConnection();
-            ObservableList<BookIssueTM> issue = bk_ssue_tbl.getItems();
-
-            selectALl = connection.prepareStatement("SELECT * FROM issuetb");
-            selectmemID = connection.prepareStatement("select name from memberdetail where id=?");
-            selectbkdtl = connection.prepareStatement("select title,status from bookdetail where id=?");
-            table = connection.prepareStatement("INSERT INTO issuetb values(?,?,?,?)");
-            delete = connection.prepareStatement("DELETE FROM issuetb WHERE issueId=?");
-            ResultSet rst = selectALl.executeQuery();
-
-            while (rst.next()) {
-                System.out.println("load");
-                issue.add(new BookIssueTM(rst.getString(1),
-                        rst.getString(2),
-                        rst.getString(3),
-                        rst.getString(4)));
+        ObservableList<BookIssueDTO> issue = FXCollections.observableArrayList(bookIssueList);
+        bk_ssue_tbl.setItems(issue);
+        bk_ssue_tbl.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<BookIssueDTO>() {
+            @Override
+            public void changed(ObservableValue<? extends BookIssueDTO> observable, BookIssueDTO oldValue, BookIssueDTO newValue) {
+                BookIssueDTO selectedItem = bk_ssue_tbl.getSelectionModel().getSelectedItem();
+                try{
+                    if(selectedItem != null){
+                        txt_isu_date.setValue(selectedItem.getDate().toLocalDate());
+                        mem_is_id.setValue(selectedItem.getMemberId());
+                        book_id.setValue(selectedItem.getBookId());
+                    }
+                }
+                catch (NullPointerException e){
+                    e.printStackTrace();
+                }
             }
+        });
 
-            bk_ssue_tbl.setItems(issue);
-            mem_is_id.getItems().clear();
-            ObservableList cmbmembers = mem_is_id.getItems();
-            String sql2 = "select id from memberdetail";
-            PreparedStatement pstm1 = connection.prepareStatement(sql2);
-            ResultSet rst1 = pstm1.executeQuery();
+        mem_is_id.getItems().clear();
 
-            while (rst1.next()) {
-                cmbmembers.add(rst1.getString(1));
-            }
+        ObservableList cmbmembers = mem_is_id.getItems();
+        for (MemberDTO member: memberDTOList
+             ) {
+            cmbmembers.add(member.getId());
+        };
 
-            book_id.getItems().clear();
-            ObservableList cmbbooks = book_id.getItems();
-            String sql3 = "select id from bookdetail";
-            PreparedStatement pstm2 = connection.prepareStatement(sql3);
-            ResultSet rst2 = pstm2.executeQuery();
-            while (rst2.next()) {
-                cmbbooks.add(rst2.getString(1));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        book_id.getItems().clear();
+        ObservableList cmbbooks = book_id.getItems();
+
+        for(BookDTO book : bookDTOList){
+            cmbbooks.add(book.getId());
         }
         mem_is_id.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
             @Override
@@ -86,18 +119,18 @@ public class BookIssueController {
                         return;
                     }
                     try {
-                        selectmemID.setString(1, selectedItem.toString());
-                        ResultSet rst = selectmemID.executeQuery();
+                        String memberId = selectedItem.toString();
+                        MemberDTO member = new MemberBLL().getMemberfromID(memberId);
 
-                        if (rst.next()) {
-                            txt_name.setText(rst.getString(1));
-                        }
-                    } catch (SQLException e) {
+                        txt_name.setText(member.getName());
+
+                    } catch (NullPointerException e) {
                         e.printStackTrace();
                     }
                 }
             }
         });
+        ;
 
         book_id.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
             @Override
@@ -107,165 +140,119 @@ public class BookIssueController {
 
                     try {
                         txt_title.clear();
-                        selectbkdtl.setString(1, selectedItem.toString());
-                        ResultSet rst = selectbkdtl.executeQuery();
-
-                        if (rst.next()) {
-                            if (rst.getString(2).equals("Available")) {
-                                txt_title.setText(rst.getString(1));
-                            } else {
-                                Alert alert = new Alert(Alert.AlertType.ERROR,
-                                        "This book isn't available!",
-                                        ButtonType.OK);
-                                Optional<ButtonType> buttonType = alert.showAndWait();
-                            }
+                        BookDTO book = new BookBLL().getBookFromId(selectedItem.toString());
+                        if(book.getStatus().equals("Available")){
+                            txt_title.setText(book.getTitle());
                         }
-                    } catch (SQLException e) {
+                        else {
+                            Alert alert = new Alert(Alert.AlertType.ERROR,
+                                    "Sách này không mượn được!",
+                                    ButtonType.OK);
+                             alert.showAndWait();
+                        }
+
+
+                    } catch (NullPointerException e) {
                         e.printStackTrace();
                     }
                 }
             }
-        });
+        });;
     }
 
-    //button new action
-    public void new_action(ActionEvent actionEvent) throws SQLException {
+    @FXML
+    public void new_action(ActionEvent actionEvent)  {
         txt_title.clear();
         txt_name.clear();
         mem_is_id.getSelectionModel().clearSelection();
+        mem_is_id.setPromptText("Member Id");
         book_id.getSelectionModel().clearSelection();
-        txt_isu_date.setPromptText("Issue Date");
+        book_id.setPromptText("Book Id ");
+        txt_isu_date.setPromptText("Ngày mượn");
 
-        String sql = "Select issueId from issuetb";
-        PreparedStatement pstm = connection.prepareStatement(sql);
-        ResultSet rst = pstm.executeQuery();
-
-        String ids = null;
-        int maxId = 0;
-
-        while (rst.next()) {
-            ids = rst.getString(1);
-
-            int id = Integer.parseInt(ids.replace("I", ""));
-            if (id > maxId) {
-                maxId = id;
-            }
-        }
-        maxId = maxId + 1;
-        String id = "";
-        if (maxId < 10) {
-            id = "I00" + maxId;
-        } else if (maxId < 100) {
-            id = "I0" + maxId;
-        } else {
-            id = "I" + maxId;
-        }
+        String id = bookIssueBLL.getNewId();
         txt_issid.setText(id);
     }
 
-    //button add action
-    public void add_Action(ActionEvent actionEvent) throws SQLException {
-
-        ObservableList<BookIssueTM> issued = FXCollections.observableList(DB.issued);
-        ObservableList<BookTM> books = FXCollections.observableList(DB.books);
+    @FXML
+    public void add_Action(ActionEvent actionEvent) {
 
         if (txt_issid.getText().isEmpty() ||
-                book_id.getSelectionModel().getSelectedItem().equals(null) ||
-                mem_is_id.getSelectionModel().getSelectedItem().equals(null)
-                || txt_isu_date.getValue().toString().equals(null)) {
+                book_id.getSelectionModel().getSelectedItem() == null ||
+                mem_is_id.getSelectionModel().getSelectedItem() == null
+                || txt_isu_date.getValue() == null) {
             Alert alert = new Alert(Alert.AlertType.ERROR,
-                    "Please fill your details.",
+                    "Vui lòng điền đủ thông tin.",
                     ButtonType.OK);
-            Optional<ButtonType> buttonType = alert.showAndWait();
+            alert.showAndWait();
             return;
-        } else {
+        }else {
             String memberId = (String) mem_is_id.getSelectionModel().getSelectedItem();
             String bookId = (String) book_id.getSelectionModel().getSelectedItem();
-            issued.add(new BookIssueTM(txt_issid.getText(), txt_isu_date.getValue().toString(), memberId, bookId));
+            BookIssueDTO newBookIssue = new BookIssueDTO(txt_issid.getText(), Date.valueOf(txt_isu_date.getValue().toString()), memberId, bookId);
 
             try {
-                table.setString(1, txt_issid.getText());
-                table.setString(2, txt_isu_date.getValue().toString());
-                table.setString(3, (String) mem_is_id.getSelectionModel().getSelectedItem());
-                table.setString(4, (String) book_id.getSelectionModel().getSelectedItem());
-                int affectedRows = table.executeUpdate();
-
-                if (affectedRows > 0) {
+                boolean check  = bookIssueBLL.insertBookIssue(newBookIssue);
+                if (check) {
                     System.out.println("Data insertion successfull");
-                    String sql2 = "Update bookdetail SET status=? where id=?";
-                    PreparedStatement pstm2 = connection.prepareStatement(sql2);
-                    String id = (String) book_id.getSelectionModel().getSelectedItem();
-                    pstm2.setString(1, "Unavailable");
-                    pstm2.setString(2, id);
-                    int affected = pstm2.executeUpdate();
-
-                    if (affected > 0) {
-                        Alert alert = new Alert(Alert.AlertType.INFORMATION,
-                                "Status updated.",
-                                ButtonType.OK);
-                        Optional<ButtonType> buttonType = alert.showAndWait();
-                    } else {
-                        System.out.println("ERROR");
-                    }
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION,
+                            "Status updated.",
+                            ButtonType.OK);
+                    alert.showAndWait();
                 }
-            } catch (SQLException e) {
+                else {
+                    System.out.println("ERROR");
+                }
+
+            } catch (NullPointerException e) {
                 e.printStackTrace();
             }
         }
+        txt_title.clear();
+        txt_name.clear();
+        txt_issid.clear();
+        txt_isu_date.setPromptText("Ngày mượn");
+        mem_is_id.getSelectionModel().clearSelection();
+        book_id.getSelectionModel().clearSelection();
+        refreshTable();
 
-        try {
-            bk_ssue_tbl.getItems().clear();
-            initialize();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+    }
+    public void refreshTable(){
+        bk_ssue_tbl.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("issueId"));
+        bk_ssue_tbl.getColumns().get(1).setCellValueFactory(new PropertyValueFactory<>("date"));
+        bk_ssue_tbl.getColumns().get(2).setCellValueFactory(new PropertyValueFactory<>("memberId"));
+        bk_ssue_tbl.getColumns().get(3).setCellValueFactory(new PropertyValueFactory<>("bookId"));
+
+        bookIssueList.clear();
+        bookIssueList = bookIssueBLL.getBookIssueDTOS();
+        ObservableList<BookIssueDTO> issue = FXCollections.observableArrayList(bookIssueList);
+        bk_ssue_tbl.setItems(issue);
+        mem_is_id.setPromptText("Member Id");
+        book_id.setPromptText("Book Id ");
+        txt_isu_date.setPromptText("Ngày mượn");
+
     }
 
-    //button delete action
-    public void delete_Action(ActionEvent actionEvent) throws SQLException {
-        //BookIssueTM selectedItem = (BookIssueTM) FXCollections.observableList(DB.issued);
-        BookIssueTM selectedItem = bk_ssue_tbl.getSelectionModel().getSelectedItem();
-        if (bk_ssue_tbl.getSelectionModel().isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.ERROR,
-                    "Please select a raw.",
-                    ButtonType.OK);
-            Optional<ButtonType> buttonType = alert.showAndWait();
-            return;
-        } else {
-            try {
-                delete.setString(1, selectedItem.getIssueId());
-                delete.executeUpdate();
+    @FXML
+    public void delete_Action(ActionEvent actionEvent)  {
 
-                String sql2 = "Update bookdetail SET status=? where id=?";
-                PreparedStatement pstm2 = connection.prepareStatement(sql2);
-                String id = (String) book_id.getSelectionModel().getSelectedItem();
-                pstm2.setString(1, "Available");
-                pstm2.setString(2, id);
-                pstm2.executeUpdate();
-
-                Alert alert = new Alert(Alert.AlertType.INFORMATION,
-                        "Record deleted!",
-                        ButtonType.OK);
-                Optional<ButtonType> buttonType = alert.showAndWait();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-
-        }
-        try {
-            bk_ssue_tbl.getItems().clear();
-            initialize();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
     }
-
-    public void back_click(MouseEvent event) throws IOException {
-        URL resource = this.getClass().getResource("/View/HomeFormView.fxml");
-        Parent root = FXMLLoader.load(resource);
-        Scene scene = new Scene(root);
-        Stage primaryStage = (Stage) this.bk_iss.getScene().getWindow();
-        primaryStage.setScene(scene);
+    @FXML
+    public void back_click(MouseEvent event) {
+        Stage stage;
+        Scene scene;
+        Parent root;
+        FXMLLoader fxmlLoader = new FXMLLoader(MainApp.class.getResource("home_view.fxml"));
+        try {
+            root = fxmlLoader.load();
+            stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+            scene = new Scene(root);
+            stage.setScene(scene);
+            stage.centerOnScreen();
+            stage.show();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         TranslateTransition tt = new TranslateTransition(Duration.millis(350), scene.getRoot());
         tt.setFromX(-scene.getWidth());
@@ -273,21 +260,6 @@ public class BookIssueController {
         tt.play();
     }
 
-    public void playMouseEnterAnimation(MouseEvent event) {
-        if (event.getSource() instanceof ImageView) {
-            ImageView icon = (ImageView) event.getSource();
 
-            ScaleTransition scaleT = new ScaleTransition(Duration.millis(200), icon);
-            scaleT.setToX(1.2);
-            scaleT.setToY(1.2);
-            scaleT.play();
 
-            DropShadow glow = new DropShadow();
-            glow.setColor(Color.YELLOW);
-            glow.setWidth(20);
-            glow.setHeight(20);
-            glow.setRadius(20);
-            icon.setEffect(glow);
-        }
-    }
 }

@@ -23,7 +23,7 @@ public class BookIssueDAO {
     }
 
     public List<BookIssueDTO> getBookIssueDTOS() {
-        this.bookIssueDTOs = DBUtils.getAll("",BookIssueDTO.class);
+        this.bookIssueDTOs = DBUtils.getAll("issuetb",BookIssueDTO.class);
         return bookIssueDTOs;
     }
     public boolean createBookIssue(BookIssueDTO BookIssue){
@@ -31,7 +31,7 @@ public class BookIssueDAO {
             conn = DBSingleton.getInstance().getConnection();
             stmt = conn.prepareStatement("INSERT INTO issuetb values(?,?,?,?)");
             stmt.setString(1, BookIssue.getIssueId());
-            stmt.setString(2, BookIssue.getDate());
+            stmt.setDate(2, BookIssue.getDate());
             stmt.setString(3, BookIssue.getMemberId());
             stmt.setString(4, BookIssue.getBookId());
 
@@ -57,7 +57,7 @@ public class BookIssueDAO {
             conn = DBSingleton.getInstance().getConnection();
             stmt = conn.prepareStatement("INSERT INTO issuetb values(?,?,?,?)");
             stmt.setString(1, BookIssue.getIssueId());
-            stmt.setString(2, BookIssue.getDate());
+            stmt.setDate(2, BookIssue.getDate());
             stmt.setString(3, BookIssue.getMemberId());
             stmt.setString(4, BookIssue.getBookId());
 
@@ -83,7 +83,7 @@ public class BookIssueDAO {
             conn = DBSingleton.getInstance().getConnection();
             stmt = conn.prepareStatement("UPDATE issuetb SET date=? , memberId=? , bookid=? where issueId=?");
             stmt.setString(4,BookIssue.getIssueId());
-            stmt.setString(1,BookIssue.getDate());
+            stmt.setDate(1,BookIssue.getDate());
             stmt.setString(2,BookIssue.getMemberId());
             stmt.setString(3,BookIssue.getBookId());
 
@@ -164,4 +164,5 @@ public class BookIssueDAO {
         }
         return null;
     }
+
 }

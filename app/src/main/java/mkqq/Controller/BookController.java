@@ -84,6 +84,7 @@ public class BookController {
             }
         });
     }
+
     public void btn_new(ActionEvent actionEvent){
         btn_add.setText("Add");
         txt_bk_st.setText("Available");
