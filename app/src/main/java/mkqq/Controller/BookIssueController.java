@@ -50,7 +50,7 @@ public class BookIssueController {
     @FXML
     public ComboBox book_id;
     @FXML
-    public TableView<BookIssueDTO> bk_ssue_tbl;
+    public TableView<IssueViewModel> bk_ssue_tbl;
     @FXML
     public AnchorPane bk_iss;
 
@@ -64,29 +64,29 @@ public class BookIssueController {
 
         bk_ssue_tbl.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("issueId"));
         bk_ssue_tbl.getColumns().get(1).setCellValueFactory(new PropertyValueFactory<>("date"));
-        bk_ssue_tbl.getColumns().get(2).setCellValueFactory(new PropertyValueFactory<>("memberId"));
-        bk_ssue_tbl.getColumns().get(3).setCellValueFactory(new PropertyValueFactory<>("bookId"));
-        //ObservableList<IssueViewModel> detailIssueList = FXCollections.observableArrayList();
+        bk_ssue_tbl.getColumns().get(2).setCellValueFactory(new PropertyValueFactory<>("memberName"));
+        bk_ssue_tbl.getColumns().get(3).setCellValueFactory(new PropertyValueFactory<>("bookName"));
+        ObservableList<IssueViewModel> detailIssueList = FXCollections.observableArrayList();
         //fucking digusting
-//        for (BookIssueDTO bookIssue: bookIssueList
-//             ) {
-//            String memberName = new MemberBLL().getMemberfromID(bookIssue.getMemberId()).getName();
-//            String bookName = new BookBLL().getBookFromId(bookIssue.getBookId()).getTitle();
-//            IssueViewModel vm = new IssueViewModel(bookIssue.getIssueId(),bookIssue.getDate().toString(),bookName, memberName);
-//            detailIssueList.add(vm);
-//        }
+        for (BookIssueDTO bookIssue: bookIssueList
+             ) {
+            MemberDTO member = new MemberBLL().getMemberfromID(bookIssue.getMemberId());
+            BookDTO book = new BookBLL().getBookFromId(bookIssue.getBookId());
+            IssueViewModel vm = new IssueViewModel(bookIssue.getIssueId(),bookIssue.getDate(),book, member,book.getTitle(),member.getName());
+            detailIssueList.add(vm);
+        }
 
-        ObservableList<BookIssueDTO> issue = FXCollections.observableArrayList(bookIssueList);
+        ObservableList<IssueViewModel> issue = FXCollections.observableArrayList(detailIssueList);
         bk_ssue_tbl.setItems(issue);
-        bk_ssue_tbl.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<BookIssueDTO>() {
+        bk_ssue_tbl.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<IssueViewModel>() {
             @Override
-            public void changed(ObservableValue<? extends BookIssueDTO> observable, BookIssueDTO oldValue, BookIssueDTO newValue) {
-                BookIssueDTO selectedItem = bk_ssue_tbl.getSelectionModel().getSelectedItem();
+            public void changed(ObservableValue<? extends IssueViewModel> observable, IssueViewModel oldValue, IssueViewModel newValue) {
+                IssueViewModel selectedItem = bk_ssue_tbl.getSelectionModel().getSelectedItem();
                 try{
                     if(selectedItem != null){
                         txt_isu_date.setValue(selectedItem.getDate().toLocalDate());
-                        mem_is_id.setValue(selectedItem.getMemberId());
-                        book_id.setValue(selectedItem.getBookId());
+                        mem_is_id.setValue(selectedItem.getMember().getId());
+                        book_id.setValue(selectedItem.getBook().getId());
                     }
                 }
                 catch (NullPointerException e){
@@ -218,14 +218,25 @@ public class BookIssueController {
 
     }
     public void refreshTable(){
+
         bk_ssue_tbl.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("issueId"));
         bk_ssue_tbl.getColumns().get(1).setCellValueFactory(new PropertyValueFactory<>("date"));
-        bk_ssue_tbl.getColumns().get(2).setCellValueFactory(new PropertyValueFactory<>("memberId"));
-        bk_ssue_tbl.getColumns().get(3).setCellValueFactory(new PropertyValueFactory<>("bookId"));
+        bk_ssue_tbl.getColumns().get(2).setCellValueFactory(new PropertyValueFactory<>("memberName"));
+        bk_ssue_tbl.getColumns().get(3).setCellValueFactory(new PropertyValueFactory<>("bookName"));
 
         bookIssueList.clear();
         bookIssueList = bookIssueBLL.getBookIssueDTOS();
-        ObservableList<BookIssueDTO> issue = FXCollections.observableArrayList(bookIssueList);
+        ObservableList<IssueViewModel> detailIssueList = FXCollections.observableArrayList();
+        //fucking digusting
+        for (BookIssueDTO bookIssue: bookIssueList
+        ) {
+            MemberDTO member = new MemberBLL().getMemberfromID(bookIssue.getMemberId());
+            BookDTO book = new BookBLL().getBookFromId(bookIssue.getBookId());
+            IssueViewModel vm = new IssueViewModel(bookIssue.getIssueId(),bookIssue.getDate(),book, member,book.getTitle(),member.getName());
+            detailIssueList.add(vm);
+        }
+
+        ObservableList<IssueViewModel> issue = FXCollections.observableArrayList(detailIssueList);
         bk_ssue_tbl.setItems(issue);
         mem_is_id.setPromptText("Member Id");
         book_id.setPromptText("Book Id ");
