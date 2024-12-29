@@ -55,7 +55,7 @@ public class BookReturnController {
     List<BookIssueDTO> issueDTOList = new BookIssueBLL().getBookIssueDTOS();
     List<BookDTO> bookDTOList = new BookBLL().getBookDTOS();
 
-    public void initialize() throws ClassNotFoundException {
+    public void initialize()  {
 
         rt_tbl.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("id"));
         rt_tbl.getColumns().get(1).setCellValueFactory(new PropertyValueFactory<>("issuedDate"));

@@ -8,6 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -17,6 +18,11 @@ import mkqq.MainApp;
 public class HomeController {
     public AnchorPane root;
 
+    public void initialize(){
+        Button openButton = new Button("Open Excel File");
+        openButton.setOnAction(e -> openFileChooser(primaryStage));
+
+    }
     public void navigate(MouseEvent event) throws IOException {
         
         if (event.getSource() instanceof ImageView) {
