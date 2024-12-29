@@ -56,8 +56,8 @@
             <columns>
                 <TableColumn fx:id="iss_id" prefWidth="75.0" text="ID"/>
                 <TableColumn fx:id="iss_date" prefWidth="93.0" text="Date"/>
-                <TableColumn fx:id="mem_name" prefWidth="195.0" text="Member ID"/>
-                <TableColumn fx:id="mem_id" prefWidth="100.0" text="Book ID"/>
+                <TableColumn fx:id="mem_name" prefWidth="195.0" text="tên hội viên"/>
+                <TableColumn fx:id="mem_id" prefWidth="100.0" text="tiêu đề sách"/>
             </columns>
             <effect>
                 <InnerShadow>
