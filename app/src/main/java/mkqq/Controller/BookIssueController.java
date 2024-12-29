@@ -59,7 +59,7 @@ public class BookIssueController {
     List<MemberDTO> memberDTOList = new MemberBLL().getMemberDTOS();
     List<BookDTO> bookDTOList = new BookBLL().getBookDTOS();
 
-    public void initialize() throws ClassNotFoundException {
+    public void initialize()  {
 
 
         bk_ssue_tbl.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("issueId"));
@@ -107,7 +107,10 @@ public class BookIssueController {
         ObservableList cmbbooks = book_id.getItems();
 
         for(BookDTO book : bookDTOList){
-            cmbbooks.add(book.getId());
+            if(book.getStatus().equals("Available")){
+                cmbbooks.add(book.getId());
+
+            }
         }
         mem_is_id.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
             @Override
@@ -145,6 +148,7 @@ public class BookIssueController {
                             txt_title.setText(book.getTitle());
                         }
                         else {
+                            book_id.getEditor().clear();
                             Alert alert = new Alert(Alert.AlertType.ERROR,
                                     "Sách này không mượn được!",
                                     ButtonType.OK);
@@ -190,9 +194,11 @@ public class BookIssueController {
             String memberId = (String) mem_is_id.getSelectionModel().getSelectedItem();
             String bookId = (String) book_id.getSelectionModel().getSelectedItem();
             BookIssueDTO newBookIssue = new BookIssueDTO(txt_issid.getText(), Date.valueOf(txt_isu_date.getValue().toString()), memberId, bookId);
-
+            BookDTO booktoUpdate = new BookBLL().getBookFromId(bookId);
+            booktoUpdate.setStatus("Unavailable");
             try {
                 boolean check  = bookIssueBLL.insertBookIssue(newBookIssue);
+                boolean bookcheck = new BookBLL().updateBook(booktoUpdate);
                 if (check) {
                     System.out.println("Data insertion successfull");
                     Alert alert = new Alert(Alert.AlertType.INFORMATION,
@@ -226,6 +232,8 @@ public class BookIssueController {
 
         bookIssueList.clear();
         bookIssueList = bookIssueBLL.getBookIssueDTOS();
+        bookDTOList.clear();
+        bookDTOList = new BookBLL().getBookDTOS();
         ObservableList<IssueViewModel> detailIssueList = FXCollections.observableArrayList();
         //fucking digusting
         for (BookIssueDTO bookIssue: bookIssueList
@@ -241,6 +249,23 @@ public class BookIssueController {
         mem_is_id.setPromptText("Member Id");
         book_id.setPromptText("Book Id ");
         txt_isu_date.setPromptText("Ngày mượn");
+        mem_is_id.getItems().clear();
+
+        ObservableList cmbmembers = mem_is_id.getItems();
+        for (MemberDTO member: memberDTOList
+        ) {
+            cmbmembers.add(member.getId());
+        };
+
+        book_id.getItems().clear();
+        ObservableList cmbbooks = book_id.getItems();
+
+        for(BookDTO book : bookDTOList){
+            if(book.getStatus().equals("Available")){
+                cmbbooks.add(book.getId());
+
+            }
+        }
 
     }
 

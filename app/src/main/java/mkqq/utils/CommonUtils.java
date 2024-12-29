@@ -1,5 +1,10 @@
 package mkqq.utils;
 
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.lang.reflect.Constructor;
@@ -42,28 +47,29 @@ public class CommonUtils {
     public static <T> List<T> ReadExcel(File file, Class<T> clazz) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         List<T> objectList = new ArrayList<>();
         try {
-            Constructor<T> constructor = clazz.getConstructor();
-            T obj = constructor.newInstance();
-            Field objecField[] = obj.getClass().getFields();
+
+
+            Field objecField[] = clazz.getDeclaredFields();
             FileInputStream fis = new FileInputStream(file);
             Workbook workbook = new XSSFWorkbook(fis);
             Sheet sheet = workbook.getSheetAt(0);
             for (int i = 1; i < sheet.getPhysicalNumberOfRows(); i++) {
+                T obj = clazz.getDeclaredConstructor().newInstance();
                 Row row = sheet.getRow(i);
-
                 if (row == null) {
+
                     continue;
                 }
                 for (int j = 0 ; j< objecField.length; j++) {
-                    field.setAccessible(true);
-                    field.set(obj,row.getCell(j).getCellValue());
+
+                    objecField[j].setAccessible(true);
+                    objecField[j].set(obj,row.getCell(j).getStringCellValue());
+
                 }
-
-
+                objectList.add(obj);
 
             }
 
-            objectList.add(obj);
             workbook.close();
             fis.close();
 

@@ -1,6 +1,9 @@
 package mkqq.Controller;
 
+import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -24,11 +27,13 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import mkqq.MainApp;
 import mkqq.BLL.BookBLL;
 import mkqq.DTO.BookDTO;
+import mkqq.utils.CommonUtils;
 
 public class BookController {
     @FXML
@@ -49,6 +54,13 @@ public class BookController {
     List<BookDTO> booklList = bookBLL.getBookDTOS();
 
     public void initialize() {
+        Button openButton = new Button("Import từ excel");
+        openButton.setOnAction(e -> openFileChooser());
+        bk_root.getChildren().add(openButton);
+
+
+        AnchorPane.setTopAnchor(openButton, 10.0);
+        AnchorPane.setLeftAnchor(openButton, 30.0);
         txt_bk_id.setDisable(true);
 
      
@@ -96,6 +108,41 @@ public class BookController {
         String newid = bookBLL.getNewId();
         txt_bk_id.setText(newid);
 
+    }
+    public void openFileChooser(){
+        List<BookDTO> booklist = new ArrayList<>();
+        List<BookDTO> errorbooklist = new ArrayList<>();
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Excel Files", "*.xlsx"));
+        File file = fileChooser.showOpenDialog(new Stage());
+        if(file != null){
+            try {
+                booklist = CommonUtils.ReadExcel(file, BookDTO.class);
+                for (var book: booklist
+                ) {
+                    System.out.println(book.toString());
+//                    boolean execres =  new BookBLL().insertBook(book);
+//                    if(!execres){
+//                        errorbooklist.add(book);
+//                        continue;
+//                    }
+                }
+                Alert alert = new Alert(Alert.AlertType.INFORMATION,
+                        "record updated",
+                        ButtonType.OK);
+                alert.showAndWait();
+                refreshTable();
+
+            } catch (NoSuchMethodException e) {
+                throw new RuntimeException(e);
+            } catch (InvocationTargetException e) {
+                throw new RuntimeException(e);
+            } catch (InstantiationException e) {
+                throw new RuntimeException(e);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
     public void btn_Add(ActionEvent actionEvent){
         txt_bk_id.setDisable(true);

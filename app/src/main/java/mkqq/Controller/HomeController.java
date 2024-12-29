@@ -1,9 +1,11 @@
 package mkqq.Controller;
 
+import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -12,15 +14,17 @@ import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import mkqq.BLL.BookBLL;
+import mkqq.DTO.BookDTO;
 import mkqq.MainApp;
+import mkqq.utils.CommonUtils;
 
 public class HomeController {
     public AnchorPane root;
 
     public void initialize(){
-        Button openButton = new Button("Open Excel File");
-        openButton.setOnAction(e -> openFileChooser(primaryStage));
 
     }
     public void navigate(MouseEvent event) throws IOException {
@@ -58,6 +62,7 @@ public class HomeController {
             }
         }
     }
+
     private void switchscene(MouseEvent event, String resource){
         Stage stage;
         Scene scene;
