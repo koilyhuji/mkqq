@@ -31,7 +31,7 @@
             </font>
         </Text>
         <TextField fx:id="bk_sch" layoutX="121.0" layoutY="125.0" prefHeight="25.0" prefWidth="346.0"
-            promptText="Search Id"/>
+            promptText="Search"/>
         <TableView fx:id="tbl_bk" layoutX="72.0" layoutY="178.0" maxHeight="-Infinity" maxWidth="-Infinity"
             minHeight="-Infinity" minWidth="-Infinity" prefHeight="110.0" prefWidth="456.0">
             <columns>
