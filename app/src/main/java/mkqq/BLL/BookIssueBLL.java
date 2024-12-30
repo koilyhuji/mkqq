@@ -1,8 +1,10 @@
 package mkqq.BLL;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import mkqq.DAO.BookIssueDAO;
+import mkqq.DTO.BookDTO;
 import mkqq.DTO.BookIssueDTO;
 
 
@@ -40,5 +42,16 @@ public class BookIssueBLL {
     }
     public BookIssueDTO getBookIssueFromId(String id){
         return bookIssueDao.getBookIssueFromId(id);
+    }
+
+    public List<BookIssueDTO> getIssuesByBookId(String bookId) {
+        List<BookIssueDTO> list = new ArrayList<>();
+        for (var issue: bookIssueDao.getBookIssueDTOS()
+             ) {
+            if(issue.getBookId().equals(bookId)){
+                list.add(issue);
+            }
+        }
+        return list;
     }
 }

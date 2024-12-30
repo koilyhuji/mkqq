@@ -14,6 +14,7 @@ public class BookReturnDTO {
         this.issuedDate = issuedDate;
         this.returnedDate = returnedDate;
         this.fine = fine;
+        this.issueid = issueid;
     }
 
     public BookReturnDTO() {

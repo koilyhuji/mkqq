@@ -55,9 +55,10 @@ public class BookController {
 
     public void initialize() {
         Button openButton = new Button("Import từ excel");
+        openButton.setStyle("-fx-background-color: #2ecc71");
         openButton.setOnAction(e -> openFileChooser());
         bk_root.getChildren().add(openButton);
-
+        //
 
         AnchorPane.setTopAnchor(openButton, 10.0);
         AnchorPane.setLeftAnchor(openButton, 30.0);
