@@ -119,19 +119,34 @@ public class BookController {
         if(file != null){
             try {
                 booklist = CommonUtils.ReadExcel(file, BookDTO.class);
-                for (var book: booklist
-                ) {
-                    System.out.println(book.toString());
+                FXMLLoader fxmlLoader = new FXMLLoader(MainApp.class.getResource("book_preview_view.fxml"));
+                Parent root = fxmlLoader.load();
+                BookPreviewController previewController = fxmlLoader.getController();
+                previewController.setData(booklist);
+
+                Scene scene = new Scene(root);
+                Stage stage = new Stage();
+                stage.setScene(scene);
+                stage.setTitle("thêm data");
+                stage.showAndWait();
+                if (previewController.isAccepted()) {
+                    for (var book: booklist
+                    ) {
+                        System.out.println(book.toString());
 //                    boolean execres =  new BookBLL().insertBook(book);
 //                    if(!execres){
 //                        errorbooklist.add(book);
 //                        continue;
 //                    }
+                    }
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION,
+                            "sách updated",
+                            ButtonType.OK);
+                    alert.showAndWait();
                 }
-                Alert alert = new Alert(Alert.AlertType.INFORMATION,
-                        "record updated",
-                        ButtonType.OK);
-                alert.showAndWait();
+
+
+
                 refreshTable();
 
             } catch (NoSuchMethodException e) {
@@ -141,6 +156,8 @@ public class BookController {
             } catch (InstantiationException e) {
                 throw new RuntimeException(e);
             } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
