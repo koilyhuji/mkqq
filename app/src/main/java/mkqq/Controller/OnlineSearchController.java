@@ -13,6 +13,11 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -26,13 +31,22 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
+import mkqq.MainApp;
 import mkqq.utils.BookOnlineViewModel;
 
 public class OnlineSearchController {
-    @FXML private TextField searchTextField;
-    @FXML private ListView<BookOnlineViewModel> searchResultsListView;
-    @FXML private Label titleLabel, authorsLabel, descriptionLabel;
-    @FXML private ImageView coverImageView;
+    @FXML
+    private TextField searchTextField;
+    @FXML
+    private ListView<BookOnlineViewModel> searchResultsListView;
+    @FXML
+    private Label titleLabel, authorsLabel, descriptionLabel;
+    @FXML
+    private ImageView coverImageView;
+    @FXML
+    private Label loadinglabel;
 
     public void initialize() {
         searchResultsListView.setCellFactory(param -> new ListCell<>() {
@@ -57,6 +71,8 @@ public class OnlineSearchController {
 
     @FXML
     private void performSearch() {
+        loadinglabel.setText("loading...");
+
         String query = searchTextField.getText().trim();
         if (!query.isEmpty()) {
             try {
@@ -91,10 +107,7 @@ public class OnlineSearchController {
                 List<BookOnlineViewModel> books = parseBookJson(response.toString());
                 ObservableList<BookOnlineViewModel> observableBooks = FXCollections.observableArrayList(books);
                 searchResultsListView.setItems(observableBooks);
-                for (BookOnlineViewModel book: observableBooks
-                     ) {
-                    System.out.println(book.getTitle());
-                }
+                loadinglabel.setText("");
                 Platform.runLater(() -> {
                     if (books.isEmpty()) {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION, "No book found");
@@ -203,10 +216,25 @@ public class OnlineSearchController {
             Image placeholder = new Image(imagePath);
             coverImageView.setImage(placeholder);
         }
-        String description = fetchDescription(book.getDescriptionLink());
-        descriptionLabel.setText(description);
+        //String description = fetchDescription(book.getDescriptionLink());
+        //descriptionLabel.setText(description);
     }
-
+    public void img_back(MouseEvent event) throws IOException {
+        Stage stage;
+        Scene scene;
+        Parent root;
+        FXMLLoader fxmlLoader = new FXMLLoader(MainApp.class.getResource("booksearch_view.fxml"));
+        try {
+            root = fxmlLoader.load();
+            stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+            scene = new Scene(root);
+            stage.setScene(scene);
+            stage.centerOnScreen();
+            stage.show();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 
 }

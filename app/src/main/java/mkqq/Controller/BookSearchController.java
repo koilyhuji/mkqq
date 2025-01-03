@@ -164,4 +164,20 @@ public class BookSearchController {
         tt.setToX(0);
         tt.play();
     }
+    public void onlineSearchView(MouseEvent event){
+        Stage stage;
+        Scene scene;
+        Parent root;
+        FXMLLoader fxmlLoader = new FXMLLoader(MainApp.class.getResource("online_search_view.fxml"));
+        try {
+            root = fxmlLoader.load();
+            stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+            scene = new Scene(root);
+            stage.setScene(scene);
+            stage.centerOnScreen();
+            stage.show();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

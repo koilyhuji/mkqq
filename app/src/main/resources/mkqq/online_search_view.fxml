@@ -12,12 +12,19 @@
     style="-fx-background-color: #f5f5f5; -fx-padding: 20;">
 
     <HBox alignment="CENTER_LEFT" spacing="10.0" style="-fx-padding: 0 0 20 0;">
+        <ImageView fitHeight="40.0" fitWidth="40.0"  style="-fx-padding:0 0 0 20" pickOnBounds="true"
+            onMouseClicked="#img_back"
+            preserveRatio="true">
+            <image>
+                <Image url="@./images/back.png"/>
+            </image>
+        </ImageView>
         <TextField fx:id="searchTextField" promptText="Tìm sách"
             style="-fx-pref-width: 300; -fx-padding: 8; -fx-font-size: 14; -fx-background-radius: 5;"/>
         <Button text="Tìm" onAction="#performSearch"
             style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-padding: 8 15; -fx-font-size: 14; -fx-background-radius: 5; -fx-cursor: hand;"/>
     </HBox>
-
+    <Label fx:id="loadinglabel" style="-fx-padding: 10;"/>
     <HBox spacing="10.0" style="-fx-padding: 10;">
         <ListView fx:id="searchResultsListView" prefWidth="450.0" maxWidth="450.0"
             style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #ddd; -fx-border-width: 1;"/>

@@ -30,6 +30,8 @@
                 <Font size="31.0"/>
             </font>
         </Text>
+        <Button fx:id="btn_add" layoutX="238.0" layoutY="17.0"  prefHeight="25.0"
+            prefWidth="159.0" style="-fx-background-color: #2ecc71;" onMouseClicked="#onlineSearchView" text="Tìm sách online"/>
         <TextField fx:id="bk_sch" layoutX="121.0" layoutY="125.0" prefHeight="25.0" prefWidth="346.0"
             promptText="Search"/>
         <TableView fx:id="tbl_bk" layoutX="72.0" layoutY="178.0" maxHeight="-Infinity" maxWidth="-Infinity"
