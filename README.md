@@ -18,7 +18,7 @@ Kho lưu trữ này chứa một ứng dụng quản lý thư viện đơn giả
 
 ## Cấu Trúc Dự Án
 
-Markdown
+```
 app/
 ├── app-snapshot.png # Ảnh chụp nhanh ứng dụng
 ├── src/ # Thư mục chứa mã nguồn
@@ -29,14 +29,14 @@ app/
 │ │     ├──DAO/
 │ │     ├──Controller/
 │ │     └──utils/
-│ └── main/resources/ # Các file FXML JavaFX và tài nguyên khác
+│ └── main/resources/ # Các file FXML 
 ├── build.gradle.kts # File cấu hình dự án Gradle (Kotlin DSL)
 ├── gradle/ # thư mục chứa file cấu hình gradle
 │ ├── wrapper/
 │ ├── gradle-wrapper.jar
 │ └── gradle-wrapper.properties
 └── README.md # File này
-
+```
 
 ## Bắt Đầu
 
@@ -50,20 +50,10 @@ Hãy làm theo các bước sau để chạy ứng dụng trên máy tính:
 
 2.  **Thiết lập cơ sở dữ liệu:**
 
-    *   **[Nếu bạn dùng cơ sở dữ liệu]**: Cung cấp hướng dẫn để thiết lập cơ sở dữ liệu của bạn. Điều này nên bao gồm các chi tiết về tên cơ sở dữ liệu, người dùng, mật khẩu và bất kỳ chi tiết kết nối liên quan nào khác. Ví dụ, điều này có thể liên quan đến việc tạo bảng cơ sở dữ liệu bằng script SQL, chạy migrations cơ sở dữ liệu, v.v.
-        *Ví dụ hướng dẫn SQL:*
-        ```sql
-        -- Ví dụ SQL để tạo cơ sở dữ liệu và các bảng
-        CREATE DATABASE library_db;
-        USE library_db;
-        CREATE TABLE books (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            title VARCHAR(255),
-            author VARCHAR(255),
-            isbn VARCHAR(20)
-        );
-        ```
-
+    *   **mariadb, mysql**: Chạy file schema.sql trong thư mục db/ vào cơ sở dữ liệu
+        
+        ```bash
+        mysql > ./db/schema.sql
 3.  **Đảm bảo Java và Gradle đã được cài đặt:** Đảm bảo bạn đã cài đặt Java Development Kit (JDK) và Gradle. Bạn có thể tải chúng từ trang web chính thức.
 
 4.  **Điều hướng đến thư mục gốc của dự án trong terminal và Build Dự Án:**
@@ -77,19 +67,19 @@ Hãy làm theo các bước sau để chạy ứng dụng trên máy tính:
     ./gradlew run
     ```
      (hoặc `gradlew.bat run` trên Windows)
-    Hoặc tìm file jar thường ở trong thư mục `build/libs` và chạy nó:
-
-     ```bash
-        java -jar build/libs/[tên-ứng-dụng-của-bạn].jar
-     ```
 
 
 ## Demo Ứng dụng
 
-[Chèn ảnh chụp hoặc video demo ở đây]
+
+<img src="snapshot/image.png" width="600" alt="3">
+<img src="snapshot/imagedn.png" width="600" alt="3">
+<img src="snapshot/imagetk.png" width="600" alt="3">
+<img src="snapshot/imagesexcel.png" width="600" alt="3">
+
 
 ## Liên Hệ
 
-tạo issue trực tiếp tại đây để liên hệ hoặc  [feiwufu64cntt@ntu.edu.vn].
+tạo issue trực tiếp tại đây để liên hệ hoặc  feiwufu64cntt@ntu.edu.vn
 
 ---
