@@ -253,6 +253,21 @@ public class BookController {
         });
     }
     public void btn_dlt(ActionEvent actionEvent){
+        if(txt_bk_id.getText().isEmpty() || txt_bk_id.getText().isBlank()){
+            Alert alert = new Alert(Alert.AlertType.ERROR,
+                    "Điền đầy đủ thông tin ",
+                    ButtonType.OK);
+
+            return;
+        }
+        boolean deleteBook = bookBLL.deleteBook(txt_bk_id.getText());
+        if(!deleteBook){
+            Alert alert = new Alert(Alert.AlertType.ERROR,
+                    "Không thể xóa sách này ",
+                    ButtonType.OK);
+
+            return;
+        }
 
     }
     public void img_back(MouseEvent event) throws IOException{
